@@ -11,12 +11,9 @@ public class BulletsScript : MonoBehaviour
     void Update()
     {
         transform.position += transform.right * speed * Time.deltaTime;
-
-        despawnTimer+= Time.deltaTime;
-        if(despawnTimer >= 5f)
-        {
-            Destroy(this.gameObject);
-        }
     }
 
 }
+
+                    
+             

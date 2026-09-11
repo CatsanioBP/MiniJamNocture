@@ -46,6 +46,6 @@ public class SpawnScript : MonoBehaviour
         chosenSpawn = spawnPositions[Random.Range(0, spawnPositions.Count)];
         GameObject spawnedEnemy = Instantiate(batEnemy, new Vector3(chosenSpawn.position.x + Random.Range(-5f, 5f), chosenSpawn.position.y + Random.Range(-5f, 5f), 0 ), Quaternion.identity);
         spawnedEnemy.TryGetComponent<BaseEnemy>(out BaseEnemy baseEnemyScript); // GETS THE BaseEnemy SCRIPT INSIDE THE ENEMY AND ALLOWS US TO SEND CHANGES TO IT
-        baseEnemyScript.target = player.transform;
+        baseEnemyScript.target = player;
     }
 }

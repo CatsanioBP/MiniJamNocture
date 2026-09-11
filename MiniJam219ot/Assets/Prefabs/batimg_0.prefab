@@ -106,9 +106,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e452e29a751444bac91f8d9f35c191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  enemySprite: {fileID: 5493862251625654589}
   target: {fileID: 0}
   speed: 2
   damage: 30
+  health: 5
 --- !u!50 &3255021388634695404
 Rigidbody2D:
   serializedVersion: 5

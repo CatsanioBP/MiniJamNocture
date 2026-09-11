@@ -11,7 +11,7 @@ public class Weapon : MonoBehaviour
         AimMouse();
         if (Input.GetMouseButtonDown(0))
         {
-            Instantiate(bullet,firePoint.transform.position,transform.rotation);
+            Destroy(Instantiate(bullet,firePoint.transform.position,transform.rotation),4f);
         }
     }
 
