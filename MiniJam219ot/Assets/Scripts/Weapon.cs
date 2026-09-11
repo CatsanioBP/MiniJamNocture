@@ -5,14 +5,12 @@ public class Weapon : MonoBehaviour
     [SerializeField] SpriteRenderer weaponSprite;
     [SerializeField] GameObject bullet;
     public Transform firePoint;
-    [SerializeField] float speedOfBullet;
 
     void Update()
     {
         AimMouse();
         if (Input.GetMouseButtonDown(0))
         {
-            
             Instantiate(bullet,firePoint.transform.position,transform.rotation);
         }
     }
