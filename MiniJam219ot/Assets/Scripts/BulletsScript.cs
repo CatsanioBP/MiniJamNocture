@@ -6,5 +6,18 @@ public class BulletsScript : MonoBehaviour
     void Update()
     {
         transform.position += transform.right * speed * Time.deltaTime;
+<<<<<<< Updated upstream
     }
 }
+=======
+
+        //despawnTimer+= Time.deltaTime;
+        //if(despawnTimer >= 5f)
+        //{
+        //    Destroy(this.gameObject);
+        //}       
+    }             
+                  
+}                 
+                  
+>>>>>>> Stashed changes
