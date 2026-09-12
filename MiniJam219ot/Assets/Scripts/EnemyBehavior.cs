@@ -7,6 +7,7 @@ public class EnemyBehavior : MonoBehaviour
     [Header("Target/physics")]
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer enemySprite;
     [Header("Orbiting")]
     [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private float orbitRadius = 5f;//the orbit where point is choosen
@@ -17,6 +18,9 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private float attackCooldown = 4f;
     [SerializeField] private float attackSpeed = 12f;
     [SerializeField] private float attackDuration = 0.5f;
+    [SerializeField] private bool isMelee;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
 
     private State currentState = State.Orbiting;
     private Vector2 currentTargetPoint;
@@ -34,6 +38,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()
     {
+       
         // Handle timers only while orbiting
         if (currentState == State.Orbiting)
         {
@@ -59,7 +64,26 @@ public class EnemyBehavior : MonoBehaviour
         //moves enemy randomly 
         if (currentState == State.Orbiting)
         {
-            Vector2 newPos = Vector2.MoveTowards(rb.position, currentTargetPoint, moveSpeed * Time.fixedDeltaTime);
+            Vector2 targetDirection = (currentTargetPoint - rb.position).normalized;
+            Vector2 desiredVelocity = targetDirection * moveSpeed;
+            AimMouse(targetDirection);
+
+            //chech distance to player
+            Vector2 vectorToPlayer = (Vector2)playerTransform.position - rb.position;
+            float distanceToPlayer = vectorToPlayer.magnitude;
+
+            //apply a push away from the player
+            if (distanceToPlayer < minDistanceToPlayer)
+            {
+                // Vector pointing directly away from the player
+                Vector2 escapeDirection = -vectorToPlayer.normalized;
+                //closer the enemy is, the harder it gets pushed away
+                float pushStrength = (minDistanceToPlayer - distanceToPlayer) / minDistanceToPlayer;
+                desiredVelocity += escapeDirection * (moveSpeed * 2f) * pushStrength;
+            }
+
+            //apply the position
+            Vector2 newPos = rb.position + desiredVelocity * Time.fixedDeltaTime;
             rb.MovePosition(newPos);
         }
     }
@@ -87,14 +111,33 @@ public class EnemyBehavior : MonoBehaviour
         // just things to find player pos to dash into him
         Vector2 attackTarget = playerTransform.position;
         Vector2 attackDirection = (attackTarget - rb.position).normalized;
+        //sAimMouse(attackTarget);
 
         float elapsedTime = 0f;
         while (elapsedTime < attackDuration)
         {
-            //Enemy dashes like hell into player
-            rb.linearVelocity = attackDirection * attackSpeed;
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            if (isMelee)
+            {
+                //Enemy dashes like hell into player
+                rb.linearVelocity = attackDirection * attackSpeed;
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+        if(!isMelee)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+            // Calculate direction towards the player
+
+
+            // If your bullet uses a Rigidbody2D for movement:
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                float bulletSpeed = 10f;
+                rb.linearVelocity = attackDirection * bulletSpeed; // Use rb.velocity in older Unity versions
+            }
         }
 
         // it's kinda resets things and make it back to ordiniting around player
@@ -117,5 +160,16 @@ public class EnemyBehavior : MonoBehaviour
             Gizmos.DrawWireSphere(playerTransform.position, minDistanceToPlayer);
         }
     }
-
+    void AimMouse(Vector2 direction)   //thing to rotate enemy,same used for weapon and player
+    {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        if (angle > 90 || angle < -90)
+        {
+            enemySprite.flipX = false;
+        }
+        else
+        {
+            enemySprite.flipX = true;
+        }
+    }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1544377164413978978}
   - component: {fileID: 2985078785126269837}
   m_Layer: 0
-  m_Name: batimg_0
+  m_Name: BatEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
