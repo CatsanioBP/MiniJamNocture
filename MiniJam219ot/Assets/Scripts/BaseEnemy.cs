@@ -8,11 +8,14 @@ public class BaseEnemy : MonoBehaviour
     [SerializeField] int damage,health;
     private Rigidbody2D rb;
     private Vector2 movement;
+    private PlayerMovement player;
+    [SerializeField] int pointsToGive, moneyToGive;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //target = GameObject.FindGameObjectWithTag("Player");
-          rb = GetComponent<Rigidbody2D>();
+        player = Object.FindAnyObjectByType<PlayerMovement>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -36,7 +39,7 @@ public class BaseEnemy : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            PlayerMovement player = Object.FindAnyObjectByType<PlayerMovement>();//find object with player script so you can call take damage of player
+            //PlayerMovement player = Object.FindAnyObjectByType<PlayerMovement>();//find object with player script so you can call take damage of player
             player.takeDamage(damage);//call function
             Destroy(gameObject);
         }
@@ -45,6 +48,7 @@ public class BaseEnemy : MonoBehaviour
             health--;
             if(health <= 0)
             {
+                player.rewardForKill(moneyToGive, pointsToGive);
                 //particle system or smth
                 //+points for player
                 Destroy(gameObject);
@@ -55,6 +59,7 @@ public class BaseEnemy : MonoBehaviour
             health--;
             if(health <= 0)
             {
+                player.rewardForKill(moneyToGive,pointsToGive);
                 //particle system or smth
                 //+points for player
                 Destroy(gameObject);
