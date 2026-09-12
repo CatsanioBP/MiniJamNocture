@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class EnemyBehavior : MonoBehaviour
@@ -108,38 +108,36 @@ public class EnemyBehavior : MonoBehaviour
     {
         currentState = State.Attacking;
 
-        // just things to find player pos to dash into him
         Vector2 attackTarget = playerTransform.position;
         Vector2 attackDirection = (attackTarget - rb.position).normalized;
         //sAimMouse(attackTarget);
 
-        float elapsedTime = 0f;
-        while (elapsedTime < attackDuration)
+        if (isMelee)
         {
-            if (isMelee)
+           
+            float elapsedTime = 0f;
+            while (elapsedTime < attackDuration)
             {
-                //Enemy dashes like hell into player
                 rb.linearVelocity = attackDirection * attackSpeed;
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
         }
-        if(!isMelee)
+        else
         {
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-
-            // Calculate direction towards the player
-
-
-            // If your bullet uses a Rigidbody2D for movement:
-            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            if (bulletPrefab != null && firePoint != null)
             {
-                float bulletSpeed = 10f;
-                rb.linearVelocity = attackDirection * bulletSpeed; // Use rb.velocity in older Unity versions
-            }
-        }
+                GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
+                Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+                if (bulletRb != null)
+                {
+                    float bulletSpeed = 10f;
+                    bulletRb.linearVelocity = attackDirection * bulletSpeed;
+                }
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
         // it's kinda resets things and make it back to ordiniting around player
         rb.linearVelocity = Vector2.zero;
         attackCooldownTimer = attackCooldown;
