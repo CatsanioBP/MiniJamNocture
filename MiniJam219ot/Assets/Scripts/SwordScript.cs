@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class SwordScript : MonoBehaviour
 {
+    //LEVEL 10 MAX or MAYBE LESS
     [SerializeField] SpriteRenderer weaponSprite;
+    public enum element{fire, wind, ice, none}
     BoxCollider2D boxCollider;
+    float knockbackStrength;
+    int elementalLevel;
+    element currentElement;
     public float reloadTime;
     private float currentReloadTime = 0f;
     public float swingTime;
@@ -23,6 +28,8 @@ public class SwordScript : MonoBehaviour
         boxCollider.enabled = false;
         mainCamera = Camera.main;
         cachedTransform = transform;
+        elementalLevel = 0;
+        currentElement = element.none;
         //pause = Object.FindAnyObjectByType<PauseScript>();
     }
     void Update()
@@ -32,7 +39,7 @@ public class SwordScript : MonoBehaviour
         {
             currentReloadTime -= Time.deltaTime;
         }
-
+        
         AimMouse();
 
         if (Input.GetMouseButtonDown(0) && currentReloadTime <= 0f)
@@ -78,15 +85,16 @@ public class SwordScript : MonoBehaviour
         //    weaponSprite.flipY = false;
         //}
     }
-    void SwingSword()
+    async void SwingSword()
     {
         weaponSprite.gameObject.SetActive(true);
         boxCollider.enabled = true;
-
-        Debug.Log("SWORD SWUNG");
-
+        
+  
+        await Awaitable.WaitForSecondsAsync(swingTime);
+        
         boxCollider.enabled = false;
         weaponSprite.gameObject.SetActive(false);
-
+        
     }
 }

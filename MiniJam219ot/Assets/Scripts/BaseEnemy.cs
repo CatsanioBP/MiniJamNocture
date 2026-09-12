@@ -50,6 +50,16 @@ public class BaseEnemy : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+        if (collision.CompareTag("OurSword"))
+        {
+            health--;
+            if(health <= 0)
+            {
+                //particle system or smth
+                //+points for player
+                Destroy(gameObject);
+            }
+        }
     }
     void AimMouse(Vector2 direction)   //thing to rotate enemy,same used for weapon and player
     { 
