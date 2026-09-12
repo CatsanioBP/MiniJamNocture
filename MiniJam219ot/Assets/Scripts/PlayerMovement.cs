@@ -1,8 +1,11 @@
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField]GameObject staffGun;
+    [SerializeField]GameObject sword;
     [Header("Player Stats")]
     [SerializeField] float speed;
     [SerializeField] int health;
@@ -50,6 +53,20 @@ public class PlayerMovement : MonoBehaviour
                 maxHealth+= 20;
                 health+=20;
                 updateHealth();
+                break;
+        }
+    }
+    public void chooseWeaponAtStart(string chosenWeapon)
+    {
+        switch (chosenWeapon)
+        {
+            case "staff":
+                staffGun.gameObject.SetActive(true);
+                sword.gameObject.SetActive(false);
+                break;
+            case "sword":
+                sword.gameObject.SetActive(true);
+                staffGun.gameObject.SetActive(false);
                 break;
         }
     }

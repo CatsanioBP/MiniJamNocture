@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public enum element{fire, wind, ice, none}
+    public float knockbackStrength;
+    public int elementalLevel;
+    public element currentElement;
     [SerializeField] SpriteRenderer weaponSprite;
     [SerializeField] GameObject bulletPrefab;
     public Transform firePoint;
@@ -75,5 +79,9 @@ public class Weapon : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, cachedTransform.rotation);
         Destroy(bullet, 3f);
         currentReloadTime = reloadTime; 
+    }
+    public void onUpgradeChoose(string chosenUpgrade)
+    {
+        
     }
 }
