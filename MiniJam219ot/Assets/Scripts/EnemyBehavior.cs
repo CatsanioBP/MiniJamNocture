@@ -9,8 +9,8 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [Header("Orbiting")]
     [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float orbitRadius = 5f;
-    [SerializeField] private float minDistanceToPlayer = 2f;
+    [SerializeField] private float orbitRadius = 5f;//the orbit where point is choosen
+    [SerializeField] private float minDistanceToPlayer = 2f;  //limit of orbit radius basicly,you can't spawn points in there
     [SerializeField] private float waypointTolerance = 0.5f;
     [SerializeField] private float timeBetweenWaypoints = 2f;
     [Header("Attack")]
