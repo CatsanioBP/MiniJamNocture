@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Stats")]
     [SerializeField] float speed;
     [SerializeField] int health;
+    [SerializeField] int maxHealth;
     [Header("Directions/Physics")]
     private Vector2 input;
     private Rigidbody2D rb;
@@ -32,6 +33,25 @@ public class PlayerMovement : MonoBehaviour
     {
         health -= takenDamage;
         //the thing where we check if hp is 0,if is:make some other function
-        hpBarText.text = health.ToString() + "/100";
+        updateHealth();
     }
+    void updateHealth()
+    {
+        hpBarText.text = health.ToString() + "/" + maxHealth.ToString();
+    }
+    public void UpgradeStat(string stat)
+    {
+        switch (stat)
+        {
+            case "speed":
+                speed+=0.5f;
+                break;
+            case "health":
+                maxHealth+= 20;
+                health+=20;
+                updateHealth();
+                break;
+        }
+    }
+    
 }
