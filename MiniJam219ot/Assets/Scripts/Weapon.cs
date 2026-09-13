@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class Weapon : MonoBehaviour
     public float reloadTime;
     private float currentReloadTime = 0f;
     //private PauseScript pause;
+    public Vector2 direction;
     private Camera mainCamera;
     private Transform cachedTransform;
 
@@ -23,6 +25,7 @@ public class Weapon : MonoBehaviour
     {
         mainCamera = Camera.main;
         cachedTransform = transform;
+        damageLevel = 0;
         //pause = Object.FindAnyObjectByType<PauseScript>();
     }
     void Update()
@@ -58,7 +61,7 @@ public class Weapon : MonoBehaviour
     void AimMouse()
     {
         Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = mousePosition - cachedTransform.position;
+        direction = mousePosition - cachedTransform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         cachedTransform.rotation = Quaternion.Euler(0, 0, angle);
@@ -82,14 +85,15 @@ public class Weapon : MonoBehaviour
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, cachedTransform.rotation);
         Destroy(bullet, 3f);
-        currentReloadTime = reloadTime; 
+        currentReloadTime = reloadTime / reloadLevel; 
         bullet.GetComponent<BulletsScript>().damageLevel = this.damageLevel;
     }
     public void onUpgradeChoose(string chosenUpgrade)
     {
-        
+        Debug.Log(chosenUpgrade);
         switch (chosenUpgrade)
         {
+            
             case "fire":
                 if(currentElement == element.fire)
                 {
@@ -130,6 +134,7 @@ public class Weapon : MonoBehaviour
                 break;
             
         }
+        elementalLevel = Math.Clamp(elementalLevel, 0, 10);
 
     }
     

@@ -10,6 +10,8 @@ using UnityEngine.UI;
 public class UpgradeBoxScript : MonoBehaviour
 {
     public GameObject player;
+    public GameObject gun;
+    public GameObject sword;
     string[] elementList;
     string[] generalUpgradeList;
     string[] powerList;
@@ -32,6 +34,8 @@ public class UpgradeBoxScript : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         sendUpgrade.AddListener(player.GetComponent<PlayerMovement>().UpgradeStat);
+        sendUpgrade.AddListener(sword.GetComponentInChildren<SwordScript>().onUpgradeChoose);
+        sendUpgrade.AddListener(gun.GetComponentInChildren<Weapon>().onUpgradeChoose);
         elementList = new string[] {"fire", "ice", "wind"};
         generalUpgradeList = new string[] {"speed", "health", "reload", "damage"};
         powerList = new string[] {"dash", "slowdown", "immunity"};
@@ -50,14 +54,13 @@ public class UpgradeBoxScript : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        foreach(Button button in upgradeButtons)
-        {
-            button.GetComponent<boxButtonScript>().clickFuncEvent.AddListener(sendUpgradeFunc);
-        }
-        Debug.Log("RANDOM COLLISION");
 
         if (collision.CompareTag("Player"))
         {
+            foreach(Button button in upgradeButtons)
+            {
+            button.GetComponent<boxButtonScript>().clickFuncEvent.AddListener(sendUpgradeFunc);
+            }
             Debug.Log("SELECT COLLISION");
             CreateUpgrades();
             upgradeUI.gameObject.SetActive(true);

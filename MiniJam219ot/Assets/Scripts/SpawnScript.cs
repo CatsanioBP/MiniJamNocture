@@ -9,11 +9,14 @@ using Random = UnityEngine.Random;
 public class SpawnScript : MonoBehaviour
 {
     [Header("References to Objects")]
+    [SerializeField]GameObject gun;
+    [SerializeField]GameObject sword;
     [SerializeField]GameObject player;
     [SerializeField]GameObject batEnemy;
     [SerializeField]Button[] upgradeButtons = new Button[3];
     [SerializeField]GameObject dropUpgradeUI;
     [SerializeField]GameObject dropPrefab;
+    [SerializeField]GameObject healthPrefab;
     [SerializeField]GameObject spawnLocationsHolder;
     [SerializeField]List<Transform> spawnPositions;
 
@@ -23,12 +26,14 @@ public class SpawnScript : MonoBehaviour
     [SerializeField]float spawnTimerLength;
     float dropSpawnTimer;
     [SerializeField]float dropSpawnTimerLength;
-
+    float healthSpawnTimer;
+    [SerializeField]float healthSpawnTimerLength;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         spawnTimer = 0f;
         dropSpawnTimer = 0f;
+        healthSpawnTimer = 0f;
     }
 
     // Update is called once per frame
@@ -38,6 +43,7 @@ public class SpawnScript : MonoBehaviour
         spawnLocationsHolder.transform.position = player.transform.position;
         spawnTimer += Time.deltaTime; //MAKES THE ENEMY SPAWN AFTER A DECIDED TIME
         dropSpawnTimer += Time.deltaTime;
+        healthSpawnTimer+=Time.deltaTime;
         if(spawnTimer >= spawnTimerLength)
         {
             spawnAnEnemy();
@@ -47,6 +53,11 @@ public class SpawnScript : MonoBehaviour
         {
             spawnADrop();
             dropSpawnTimer=0;
+        }
+        if(healthSpawnTimer >= healthSpawnTimerLength)
+        {
+            spawnAHealthDrop();
+            healthSpawnTimer = 0;
         }
     }
 
@@ -58,6 +69,7 @@ public class SpawnScript : MonoBehaviour
         GameObject spawnedEnemy = Instantiate(batEnemy, new Vector3(chosenSpawn.position.x + Random.Range(-5f, 5f), chosenSpawn.position.y + Random.Range(-5f, 5f), 0 ), Quaternion.identity);
         spawnedEnemy.TryGetComponent<BaseEnemy>(out BaseEnemy baseEnemyScript); // GETS THE BaseEnemy SCRIPT INSIDE THE ENEMY AND ALLOWS US TO SEND CHANGES TO IT
         baseEnemyScript.target = player;
+        baseEnemyScript.gun = this.gun.GetComponent<Weapon>();
     }
     void spawnADrop()
     {
@@ -68,5 +80,16 @@ public class SpawnScript : MonoBehaviour
         boxScript.player = this.player;
         boxScript.upgradeButtons = this.upgradeButtons;
         boxScript.upgradeUI = this.dropUpgradeUI;
+        boxScript.gun = this.gun;
+        boxScript.sword = this.sword;
+    }
+    void spawnAHealthDrop()
+    {
+        Transform chosenSpawn;
+        chosenSpawn = spawnPositions[Random.Range(0, spawnPositions.Count)];
+        GameObject spawnedEnemy = Instantiate(healthPrefab, new Vector3(chosenSpawn.position.x + Random.Range(-5f, 5f), chosenSpawn.position.y + Random.Range(-5f, 5f), 0 ), Quaternion.identity);
+        spawnedEnemy.TryGetComponent<healthPickupScript>(out healthPickupScript healthPickup);
+        healthPickup.playerScript = player.GetComponent<PlayerMovement>();
+        
     }
 }

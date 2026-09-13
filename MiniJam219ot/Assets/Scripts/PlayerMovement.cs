@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using System.Collections;
+using System;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -46,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
     public void takeDamage(int takenDamage)
     {
         health -= takenDamage;
+        health = Math.Clamp(health, -25, maxHealth);
         //the thing where we check if hp is 0,if is:make some other function
         updateHealth();
     }
@@ -73,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
                 health+=25;
                 updateHealth();
                 break;
+            
         }
     }
     public void chooseWeaponAtStart(string chosenWeapon)
