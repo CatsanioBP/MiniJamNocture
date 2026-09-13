@@ -31,8 +31,6 @@ public class SwordScript : MonoBehaviour
         boxCollider.enabled = false;
         mainCamera = Camera.main;
         cachedTransform = transform;
-        elementalLevel = 0;
-        currentElement = element.none;
         //pause = Object.FindAnyObjectByType<PauseScript>();
     }
     void Update()
@@ -139,6 +137,7 @@ public class SwordScript : MonoBehaviour
                 break;
             case "reload":
                 reloadLevel+=1;
+                reloadTime = 1/reloadLevel;
                 break;
             case "damage":
                 damageLevel+=1;

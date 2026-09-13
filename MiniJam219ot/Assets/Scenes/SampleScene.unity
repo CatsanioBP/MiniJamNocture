@@ -457,10 +457,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordScript
   weaponSprite: {fileID: 1868341210}
-  knockbackStrength: 0
+  knockbackStrength: 1
   elementalLevel: 0
   damageLevel: 0
-  currentElement: 0
+  currentElement: 3
   reloadTime: 1
   swingTime: 0.2
   direction: {x: 0, y: 0}
@@ -498,7 +498,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.99871427, y: 0.0012769997}
+  m_Offset: {x: 1.4, y: 0.0012769997}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -508,7 +508,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.0086446, y: 0.35269278}
+  m_Size: {x: 2.530998, y: 0.54892707}
   m_EdgeRadius: 0
 --- !u!1 &68079325
 GameObject:
@@ -9593,6 +9593,19 @@ MonoBehaviour:
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
     rgba: 4294967295
   m_fontSize: 36
   m_fontSizeBase: 36
@@ -9955,11 +9968,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SwordScript
   knockbackStrength: 1
   elementalLevel: 0
-  currentElement: 0
+  currentElement: 3
   weaponSprite: {fileID: 664284326}
   bulletPrefab: {fileID: 4489660094263849416, guid: 62a85919094b9724bbdebb571842daf2, type: 3}
   firePoint: {fileID: 1316210020}
   reloadTime: 0.5
+  direction: {x: 0, y: 0}
 --- !u!212 &1562093577
 SpriteRenderer:
   serializedVersion: 2
@@ -13245,6 +13259,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 414d5186b1d230b47bee66c446590ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnScript
+  gun: {fileID: 1562093574}
+  sword: {fileID: 44826853}
   player: {fileID: 1379095366}
   batEnemy: {fileID: 2912656492096536280, guid: 86d29ccabc29a7049a37dcf1d76b0914, type: 3}
   upgradeButtons:
@@ -13253,14 +13269,16 @@ MonoBehaviour:
   - {fileID: 597307678}
   dropUpgradeUI: {fileID: 1610741773}
   dropPrefab: {fileID: 4754483377542904522, guid: 2f22ca80375030848b51fc76c3547a8e, type: 3}
+  healthPrefab: {fileID: 3440683248218734503, guid: 1c9afd898bda6ed41acef84678716d78, type: 3}
   spawnLocationsHolder: {fileID: 1286175389}
   spawnPositions:
   - {fileID: 1551586261}
   - {fileID: 362976241}
   - {fileID: 1706818795}
   - {fileID: 180568119}
-  spawnTimerLength: 5
+  spawnTimerLength: 3
   dropSpawnTimerLength: 5
+  healthSpawnTimerLength: 5
 --- !u!4 &2131153620
 Transform:
   m_ObjectHideFlags: 0
@@ -13668,4 +13686,3 @@ SceneRoots:
   - {fileID: 470352521}
   - {fileID: 686949180}
   - {fileID: 745530601}
-  - {fileID: 1546803872}

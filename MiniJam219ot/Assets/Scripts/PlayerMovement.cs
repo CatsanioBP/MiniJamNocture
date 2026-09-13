@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 input;
     private Rigidbody2D rb;
     [Header("UI parameters")]
-    [SerializeField] Image rechargeFill;
+    [SerializeField]Image rechargeFill;
     //[SerializeField] TextMeshProUGUI rechargeText;
     [SerializeField] TextMeshProUGUI hpBarText;
     [SerializeField] TextMeshProUGUI poitsCountText;
@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
         if (powerReloadT >= 0)
         {
             powerReloadT -= Time.deltaTime;
-            rechargeFill.fillAmount = powerReloadT/10;
+            // rechargeFill.fillamount = powerReloadT/10; //<------------ LOOK AT THIS
             //rechargeText.text = (int)powerReloadT + "";
            
         }
@@ -65,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
         if (!isImmune)
         {
             health -= takenDamage;
+            health = Math.Clamp(health, -25, maxHealth);
             //the thing where we check if hp is 0,if is:make some other function
             updateHealth();
         }
@@ -94,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
                 health += 20;
                 updateHealth();
                 break;
+            
         }
     }
     public void chooseWeaponAtStart(string chosenWeapon)
