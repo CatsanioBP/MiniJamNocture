@@ -69,8 +69,8 @@ public class PlayerMovement : MonoBehaviour
                 speed+=0.5f;
                 break;
             case "health":
-                maxHealth+= 20;
-                health+=20;
+                maxHealth+= 25;
+                health+=25;
                 updateHealth();
                 break;
         }

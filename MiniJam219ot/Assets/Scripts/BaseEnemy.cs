@@ -45,7 +45,7 @@ public class BaseEnemy : MonoBehaviour
         }
         if(collision.CompareTag("OurBullet"))
         {
-            health--;
+            health-= 1 + collision.GetComponent<BulletsScript>().damageLevel;
             if(health <= 0)
             {
                 player.rewardForKill(moneyToGive, pointsToGive);
@@ -56,7 +56,7 @@ public class BaseEnemy : MonoBehaviour
         }
         if (collision.CompareTag("OurSword"))
         {
-            health--;
+            health-= 2 + collision.GetComponent<SwordScript>().damageLevel;
             if(health <= 0)
             {
                 player.rewardForKill(moneyToGive,pointsToGive);
