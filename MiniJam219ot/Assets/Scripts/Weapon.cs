@@ -15,7 +15,7 @@ public class Weapon : MonoBehaviour
 
     public float reloadTime;
     private float currentReloadTime = 0f;
-    private PauseScript pause;
+    //private PauseScript pause;
     private Camera mainCamera;
     private Transform cachedTransform;
 

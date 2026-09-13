@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,11 +11,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] int health;
     [SerializeField] int maxHealth;
+    [SerializeField] float powerReloadT,maxPowerReloadT;
+    public int points;
+    public int money;
     [Header("Directions/Physics")]
     private Vector2 input;
     private Rigidbody2D rb;
     [Header("UI parameters")]
     [SerializeField] TextMeshProUGUI hpBarText;
+    [SerializeField] TextMeshProUGUI poitsCountText;
+    [SerializeField] TextMeshProUGUI moneyCountText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +33,11 @@ public class PlayerMovement : MonoBehaviour
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
         input.Normalize();
+        powerReloadT -= Time.deltaTime;
+        if(Input.GetMouseButtonDown(1) && powerReloadT <= 0f)
+        {
+            StartCoroutine(dashBoost());
+        }
     }
     private void FixedUpdate()
     {
@@ -37,6 +48,14 @@ public class PlayerMovement : MonoBehaviour
         health -= takenDamage;
         //the thing where we check if hp is 0,if is:make some other function
         updateHealth();
+    }
+    public void rewardForKill(int moneyGain,int pointsGain)
+    {
+        money += moneyGain;
+        points += pointsGain;
+        poitsCountText.text = "Points:" + points;
+        moneyCountText.text = money + "$";
+
     }
     void updateHealth()
     {
@@ -70,5 +89,11 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
     }
-    
+    IEnumerator dashBoost()
+    {
+        speed += 10;
+        yield return new WaitForSeconds(1f);
+        speed -= 10;
+        powerReloadT = maxPowerReloadT;
+    }
 }
