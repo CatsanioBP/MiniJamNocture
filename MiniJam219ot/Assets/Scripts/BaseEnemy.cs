@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 
 public class BaseEnemy : MonoBehaviour
 {
@@ -30,7 +31,10 @@ public class BaseEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (GameManager.isInRun == false)
+        {
+            Destroy(gameObject);
+        }
         Vector2 direction = target.transform.position - transform.position;//calculate where enemy need to go
         AimMouse(direction);
         direction.Normalize();
@@ -115,6 +119,11 @@ public class BaseEnemy : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+        if (collision.CompareTag("IceZone"))
+        {
+            StartCoroutine(speedDown());
+
+        }
     }
     void AimMouse(Vector2 direction)   //thing to rotate enemy,same used for weapon and player
     { 
@@ -144,4 +153,10 @@ public class BaseEnemy : MonoBehaviour
     //     await Awaitable.WaitForSecondsAsync(5f);
 
     // }
+    IEnumerator speedDown()
+    {
+        speed -= 2;
+        yield return new WaitForSeconds(3f);
+        speed += 2;
+    }
 }

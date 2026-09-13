@@ -8,6 +8,7 @@ public class EnemyBehavior : MonoBehaviour
     private PlayerMovement player;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer enemySprite;
     [Header("Orbiting")]
     [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private float orbitRadius = 5f;//the orbit where point is choosen
@@ -21,11 +22,9 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private bool isMelee;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private SpriteRenderer enemySprite;
-    [Header("Stats")]
+    [SerializeField] int pointsToGive, moneyToGive;
     [SerializeField] private int damage = 1;
     [SerializeField] private int health = 3;
-    [SerializeField] int pointsToGive, moneyToGive;
 
     private State currentState = State.Orbiting;
     private Vector2 currentTargetPoint;
@@ -34,7 +33,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Start()
     {
-        player = Object.FindAnyObjectByType<PlayerMovement>();
+         player = Object.FindAnyObjectByType<PlayerMovement>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         rb = GetComponent<Rigidbody2D>();
         // Generate the first random movement target
@@ -45,6 +44,10 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.isInRun == false)
+        {
+            Destroy(gameObject);
+        }
         if (currentState == State.Orbiting)
         {                                  
             waypointTimer -= Time.deltaTime;
@@ -117,7 +120,6 @@ public class EnemyBehavior : MonoBehaviour
     {
         currentState = State.Attacking;
 
-        // just things to find player pos to dash into him
         Vector2 attackTarget = playerTransform.position;
         Vector2 attackDirection = (attackTarget - rb.position).normalized;
         //sAimMouse(attackTarget);
@@ -149,7 +151,7 @@ public class EnemyBehavior : MonoBehaviour
             }
             yield return new WaitForSeconds(0.1f);
         }
-
+      
         // it's kinda resets things and make it back to ordiniting around player
         rb.linearVelocity = Vector2.zero;
         attackCooldownTimer = attackCooldown;
@@ -204,7 +206,26 @@ public class EnemyBehavior : MonoBehaviour
 
             }
         }
+        if (collision.CompareTag("IceZone"))
+        {
+            StartCoroutine(speedDown());
+          
+        }
     }
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("IceZone"))
+    //    {
+    //        StartCoroutine(speedDown());
+    //        if (health <= 0)
+    //        {
+    //            player.rewardForKill(moneyToGive, pointsToGive);
+    //            // TODO: Add points to player score manager here
+    //            // TODO: Instantiate particle effect
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //}
 
     void AimMouse(Vector2 direction)   //thing to rotate enemy,same used for weapon and player
     {
@@ -217,5 +238,13 @@ public class EnemyBehavior : MonoBehaviour
         {
             enemySprite.flipX = true;
         }
+    }
+    IEnumerator speedDown()
+    {
+        moveSpeed -= 2;
+        attackSpeed -= 2;
+        yield return new WaitForSeconds(3f);
+        moveSpeed += 2;
+        attackSpeed += 2;
     }
 }

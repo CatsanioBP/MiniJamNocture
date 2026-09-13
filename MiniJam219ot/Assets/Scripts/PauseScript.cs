@@ -12,6 +12,12 @@ public class PauseScript : MonoBehaviour
 
     void Start()
     {
+        //pickingMenu.gameObject.SetActive(true);
+        //SimplePause();
+        WeaponChoice();
+    }
+    public void WeaponChoice()
+    {
         pickingMenu.gameObject.SetActive(true);
         SimplePause();
     }
