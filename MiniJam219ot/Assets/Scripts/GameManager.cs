@@ -33,11 +33,13 @@ public class GameManager : MonoBehaviour
         if(isInRun)
         {
             timeOfRun -= Time.deltaTime;
+            
+            
             timeLeftText.text = "Survive for:"+(int)timeOfRun+"!";
             if(timeOfRun <= 0)
             {
-                EndOfRun();
                 isPerfectRun = true;
+                EndOfRun();
             }
         }
     }
@@ -74,6 +76,10 @@ public class GameManager : MonoBehaviour
     }
     public void EndingShow()
     {
+        if(player.points <= 250)
+        {
+            
+        }
          //player score if statement >250 bad <250 good
     }
     

@@ -22,6 +22,9 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private bool isMelee;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
+    [SerializeField] int pointsToGive, moneyToGive;
+    [SerializeField] private int damage = 1;
+    [SerializeField] private int health = 3;
 
     private State currentState = State.Orbiting;
     private Vector2 currentTargetPoint;
@@ -148,21 +151,7 @@ public class EnemyBehavior : MonoBehaviour
             }
             yield return new WaitForSeconds(0.1f);
         }
-        else
-        {
-            if (bulletPrefab != null && firePoint != null)
-            {
-                GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-
-                Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
-                if (bulletRb != null)
-                {
-                    float bulletSpeed = 10f;
-                    bulletRb.linearVelocity = attackDirection * bulletSpeed;
-                }
-            }
-            yield return new WaitForSeconds(0.1f);
-        }
+      
         // it's kinda resets things and make it back to ordiniting around player
         rb.linearVelocity = Vector2.zero;
         attackCooldownTimer = attackCooldown;

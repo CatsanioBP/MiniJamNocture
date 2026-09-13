@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] int health;
     [SerializeField] int maxHealth;
     [SerializeField] float powerReloadT, maxPowerReloadT;
-    public int points;
+    public double points;
     public int money;
     [SerializeField] bool isImmune;
     [Header("Directions/Physics")]
@@ -69,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
             updateHealth();
         }
     }
+    
     public void rewardForKill(int moneyGain, int pointsGain)
     {
         money += moneyGain;
