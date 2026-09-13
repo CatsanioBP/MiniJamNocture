@@ -2228,6 +2228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8314de757ad8124c977b04bf72d3ac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseScript
+  pickingMenu: {fileID: 0}
   pauseMenu: {fileID: 99496475}
 --- !u!1 &766930613
 GameObject:
@@ -2411,6 +2412,11 @@ MonoBehaviour:
   isMelee: 0
   bulletPrefab: {fileID: 4489660094263849416, guid: 62a85919094b9724bbdebb571842daf2, type: 3}
   firePoint: {fileID: 814144524}
+  enemySprite: {fileID: 814144523}
+  damage: 1
+  health: 3
+  pointsToGive: 0
+  moneyToGive: 0
 --- !u!50 &814144522
 Rigidbody2D:
   serializedVersion: 5
@@ -3630,6 +3636,18 @@ MonoBehaviour:
   speed: 5
   health: 100
   hpBarText: {fileID: 971171796}
+  staffGun: {fileID: 0}
+  sword: {fileID: 0}
+  speed: 5
+  health: 100
+  maxHealth: 0
+  powerReloadT: 0
+  maxPowerReloadT: 0
+  points: 0
+  money: 0
+  hpBarText: {fileID: 971171796}
+  poitsCountText: {fileID: 0}
+  moneyCountText: {fileID: 0}
 --- !u!50 &1379095370
 Rigidbody2D:
   serializedVersion: 5
@@ -4493,6 +4511,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6547707376c944596ef3f2e0ca31e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  knockbackStrength: 0
+  elementalLevel: 0
+  currentElement: 0
   weaponSprite: {fileID: 664284326}
   bulletPrefab: {fileID: 4489660094263849416, guid: 62a85919094b9724bbdebb571842daf2, type: 3}
   firePoint: {fileID: 1316210020}
