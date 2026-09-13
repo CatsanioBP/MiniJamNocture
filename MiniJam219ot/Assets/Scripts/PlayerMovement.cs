@@ -2,30 +2,37 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using System.Collections;
-using System;
+using Unity.UI;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField]GameObject staffGun;
-    [SerializeField]GameObject sword;
+    [SerializeField] GameObject staffGun;
+    [SerializeField] GameObject sword;
+    [SerializeField] GameObject iceZone;
+    [SerializeField] SpriteRenderer playerSprite;
     [Header("Player Stats")]
     [SerializeField] float speed;
+    public float speedBoost;//value that adds up to speed when you use dash power
     [SerializeField] int health;
     [SerializeField] int maxHealth;
-    [SerializeField] float powerReloadT,maxPowerReloadT;
-    public int points;
+    [SerializeField] float powerReloadT, maxPowerReloadT;
+    public double points;
     public int money;
+    [SerializeField] bool isImmune;
     [Header("Directions/Physics")]
     private Vector2 input;
     private Rigidbody2D rb;
     [Header("UI parameters")]
+    [SerializeField]Image rechargeFill;
+    //[SerializeField] TextMeshProUGUI rechargeText;
     [SerializeField] TextMeshProUGUI hpBarText;
     [SerializeField] TextMeshProUGUI poitsCountText;
     [SerializeField] TextMeshProUGUI moneyCountText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-         rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -34,10 +41,19 @@ public class PlayerMovement : MonoBehaviour
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
         input.Normalize();
-        powerReloadT -= Time.deltaTime;
-        if(Input.GetMouseButtonDown(1) && powerReloadT <= 0f)
+        if (powerReloadT >= 0)
         {
-            StartCoroutine(dashBoost());
+            powerReloadT -= Time.deltaTime;
+            // rechargeFill.fillamount = powerReloadT/10; //<------------ LOOK AT THIS
+            //rechargeText.text = (int)powerReloadT + "";
+           
+        }
+        
+        if (Input.GetMouseButtonDown(1) && powerReloadT <= 0f)
+        {
+            StartCoroutine(iceZonePower());
+            //StartCoroutine(imunnityPower());
+            //StartCoroutine(dashBoost());
         }
     }
     private void FixedUpdate()
@@ -46,12 +62,16 @@ public class PlayerMovement : MonoBehaviour
     }
     public void takeDamage(int takenDamage)
     {
-        health -= takenDamage;
-        health = Math.Clamp(health, -25, maxHealth);
-        //the thing where we check if hp is 0,if is:make some other function
-        updateHealth();
+        if (!isImmune)
+        {
+            health -= takenDamage;
+            health = Math.Clamp(health, -25, maxHealth);
+            //the thing where we check if hp is 0,if is:make some other function
+            updateHealth();
+        }
     }
-    public void rewardForKill(int moneyGain,int pointsGain)
+    
+    public void rewardForKill(int moneyGain, int pointsGain)
     {
         money += moneyGain;
         points += pointsGain;
@@ -68,11 +88,11 @@ public class PlayerMovement : MonoBehaviour
         switch (stat)
         {
             case "speed":
-                speed+=0.5f;
+                speed += 0.5f;
                 break;
             case "health":
-                maxHealth+= 25;
-                health+=25;
+                maxHealth += 20;
+                health += 20;
                 updateHealth();
                 break;
             
@@ -92,11 +112,27 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
     }
-    IEnumerator dashBoost()
+    IEnumerator dashBoostPower()
     {
-        speed += 10;
+        speed += speedBoost;
         yield return new WaitForSeconds(1f);
-        speed -= 10;
+        speed -= speedBoost;
+        powerReloadT = maxPowerReloadT;
+    }
+    IEnumerator imunnityPower()
+    {
+        isImmune = true;
+        playerSprite.color = Color.grey;
+        yield return new WaitForSeconds(3f);
+        playerSprite.color = Color.white;
+        isImmune = false;
+        powerReloadT = maxPowerReloadT;
+    }
+    IEnumerator iceZonePower()
+    {
+        iceZone.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        iceZone.SetActive(false);
         powerReloadT = maxPowerReloadT;
     }
 }

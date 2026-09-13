@@ -8,6 +8,7 @@ TagManager:
   - EnemyBullet
   - OurSword
   - pound
+  - IceZone
   layers:
   - Default
   - TransparentFX

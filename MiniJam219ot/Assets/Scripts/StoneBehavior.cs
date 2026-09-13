@@ -39,6 +39,10 @@ public class StoneBehavior : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.isInRun == false)
+        {
+            Destroy(gameObject);
+        }
         //if (PauseScript.isPaused) return;
         if (currentState == State.Attacking)
         {
@@ -98,17 +102,9 @@ public class StoneBehavior : MonoBehaviour
 
             }
         }
-        else if (collision.CompareTag("OurSword"))
+        if (collision.CompareTag("IceZone"))
         {
-            health--;
-            if (health <= 0)
-            {
-                player.rewardForKill(moneyToGive, pointsToGive);
-                // TODO: Add points to player score manager here
-                // TODO: Instantiate particle effect
-                Destroy(gameObject);
-
-            }
+            StartCoroutine(speedDown());
         }
     }
 
@@ -123,5 +119,13 @@ public class StoneBehavior : MonoBehaviour
         {
             enemySprite.flipX = true;
         }
+    }
+    IEnumerator speedDown()
+    {
+        speed -= 2;
+        timeBetweenAttacks += 2;
+        yield return new WaitForSeconds(3f);
+        speed += 2;
+        timeBetweenAttacks -= 2;
     }
 }
