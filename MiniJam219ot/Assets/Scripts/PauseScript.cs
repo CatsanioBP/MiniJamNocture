@@ -8,6 +8,18 @@ public class PauseScript : MonoBehaviour
     public static bool isPaused;
     [SerializeField] GameObject pauseMenu;
 
+
+    void Start()
+    {
+        //pickingMenu.gameObject.SetActive(true);
+        //SimplePause();
+        WeaponChoice();
+    }
+    public void WeaponChoice()
+    {
+        pickingMenu.gameObject.SetActive(true);
+        SimplePause();
+    }
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))

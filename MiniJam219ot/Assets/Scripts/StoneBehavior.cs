@@ -36,6 +36,10 @@ public class StoneBehavior : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.isInRun == false)
+        {
+            Destroy(gameObject);
+        }
         //if (PauseScript.isPaused) return;
         if (currentState == State.Attacking)
         {
@@ -94,6 +98,10 @@ public class StoneBehavior : MonoBehaviour
 
             }
         }
+        if (collision.CompareTag("IceZone"))
+        {
+            StartCoroutine(speedDown());
+        }
     }
 
     void AimMouse(Vector2 direction)   //thing to rotate enemy,same used for weapon and player
@@ -107,5 +115,13 @@ public class StoneBehavior : MonoBehaviour
         {
             enemySprite.flipX = true;
         }
+    }
+    IEnumerator speedDown()
+    {
+        speed -= 2;
+        timeBetweenAttacks += 2;
+        yield return new WaitForSeconds(3f);
+        speed += 2;
+        timeBetweenAttacks -= 2;
     }
 }

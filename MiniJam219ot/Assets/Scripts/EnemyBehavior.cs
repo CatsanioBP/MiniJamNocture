@@ -29,6 +29,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Start()
     {
+         player = Object.FindAnyObjectByType<PlayerMovement>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         rb = GetComponent<Rigidbody2D>();
         // Generate the first random movement target
@@ -38,8 +39,10 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()
     {
-       
-        // Handle timers only while orbiting
+        if(GameManager.isInRun == false)
+        {
+            Destroy(gameObject);
+        }
         if (currentState == State.Orbiting)
         {
             waypointTimer -= Time.deltaTime;
@@ -158,6 +161,61 @@ public class EnemyBehavior : MonoBehaviour
             Gizmos.DrawWireSphere(playerTransform.position, minDistanceToPlayer);
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (collision.TryGetComponent<PlayerMovement>(out PlayerMovement player))
+            {
+                player.takeDamage(damage);
+            }
+
+        }
+        else if (collision.CompareTag("OurBullet"))
+        {
+            health--;
+            if (health <= 0)
+            {
+                player.rewardForKill(moneyToGive, pointsToGive);
+                // TODO: Add points to player score manager here
+                // TODO: Instantiate particle effect
+                Destroy(gameObject);
+
+            }
+        }
+        else if (collision.CompareTag("OurSword"))
+        {
+            health--;
+            if (health <= 0)
+            {
+                player.rewardForKill(moneyToGive, pointsToGive);
+                // TODO: Add points to player score manager here
+                // TODO: Instantiate particle effect
+                Destroy(gameObject);
+
+            }
+        }
+        if (collision.CompareTag("IceZone"))
+        {
+            StartCoroutine(speedDown());
+          
+        }
+    }
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("IceZone"))
+    //    {
+    //        StartCoroutine(speedDown());
+    //        if (health <= 0)
+    //        {
+    //            player.rewardForKill(moneyToGive, pointsToGive);
+    //            // TODO: Add points to player score manager here
+    //            // TODO: Instantiate particle effect
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //}
+
     void AimMouse(Vector2 direction)   //thing to rotate enemy,same used for weapon and player
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -169,5 +227,13 @@ public class EnemyBehavior : MonoBehaviour
         {
             enemySprite.flipX = true;
         }
+    }
+    IEnumerator speedDown()
+    {
+        moveSpeed -= 2;
+        attackSpeed -= 2;
+        yield return new WaitForSeconds(3f);
+        moveSpeed += 2;
+        attackSpeed += 2;
     }
 }

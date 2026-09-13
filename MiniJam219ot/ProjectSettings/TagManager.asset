@@ -6,6 +6,9 @@ TagManager:
   tags:
   - OurBullet
   - EnemyBullet
+  - OurSword
+  - pound
+  - IceZone
   layers:
   - Default
   - TransparentFX
