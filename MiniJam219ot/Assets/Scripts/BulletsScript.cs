@@ -3,6 +3,7 @@ using UnityEngine;
 public class BulletsScript : MonoBehaviour
 {
     [SerializeField] float speed = 10f;
+    public int damageLevel;
     float despawnTimer;
     void OnEnable()
     {

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -9,6 +10,9 @@ public class Weapon : MonoBehaviour
     [SerializeField] SpriteRenderer weaponSprite;
     [SerializeField] GameObject bulletPrefab;
     public Transform firePoint;
+    float reloadLevel;
+    float damageLevel;
+
     public float reloadTime;
     private float currentReloadTime = 0f;
     //private PauseScript pause;
@@ -83,5 +87,49 @@ public class Weapon : MonoBehaviour
     public void onUpgradeChoose(string chosenUpgrade)
     {
         
+        switch (chosenUpgrade)
+        {
+            case "fire":
+                if(currentElement == element.fire)
+                {
+                    elementalLevel+=1;
+                }
+                else{
+                    currentElement = element.fire;
+                    elementalLevel-=1;
+                }
+
+                break;
+            case "wind":
+                if(currentElement == element.wind)
+                {
+                    elementalLevel+=1;
+                }
+                else{
+                    currentElement = element.wind;
+                    elementalLevel-=1;
+                }
+
+                break;
+            case "ice":
+                if(currentElement == element.ice)
+                {
+                    elementalLevel+=1;
+                }
+                else{
+                    currentElement = element.ice;
+                    elementalLevel-=1;
+                }
+                break;
+            case "reload":
+                reloadLevel+=1;
+                break;
+            case "damage":
+
+                break;
+            
+        }
+
     }
+    
 }
