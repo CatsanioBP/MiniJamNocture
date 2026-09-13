@@ -7,9 +7,11 @@ public class SwordScript : MonoBehaviour
     [SerializeField] SpriteRenderer weaponSprite;
     public enum element{fire, wind, ice, none}
     BoxCollider2D boxCollider;
-    float knockbackStrength;
-    int elementalLevel;
+    public float knockbackStrength;
+    public int elementalLevel;
+    public int damageLevel;
     element currentElement;
+    int reloadLevel = 0;
     public float reloadTime;
     private float currentReloadTime = 0f;
     public float swingTime;
@@ -96,5 +98,52 @@ public class SwordScript : MonoBehaviour
         boxCollider.enabled = false;
         weaponSprite.gameObject.SetActive(false);
         
+    }
+    public void onUpgradeChoose(string chosenUpgrade)
+    {
+        
+        switch (chosenUpgrade)
+        {
+            case "fire":
+                if(currentElement == element.fire)
+                {
+                    elementalLevel+=1;
+                }
+                else{
+                    currentElement = element.fire;
+                    elementalLevel-=1;
+                }
+
+                break;
+            case "wind":
+                if(currentElement == element.wind)
+                {
+                    elementalLevel+=1;
+                }
+                else{
+                    currentElement = element.wind;
+                    elementalLevel-=1;
+                }
+
+                break;
+            case "ice":
+                if(currentElement == element.ice)
+                {
+                    elementalLevel+=1;
+                }
+                else{
+                    currentElement = element.ice;
+                    elementalLevel-=1;
+                }
+                break;
+            case "reload":
+                reloadLevel+=1;
+                break;
+            case "damage":
+                damageLevel+=1;
+                break;
+            
+        }
+
     }
 }
