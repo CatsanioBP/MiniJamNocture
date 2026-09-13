@@ -107,9 +107,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   enemySprite: {fileID: 2958556941327587390}
+  target: {fileID: 0}
   speed: 2
   damage: 30
   health: 3
+  pointsToGive: 5
+  moneyToGive: 5
 --- !u!50 &1544377164413978978
 Rigidbody2D:
   serializedVersion: 5

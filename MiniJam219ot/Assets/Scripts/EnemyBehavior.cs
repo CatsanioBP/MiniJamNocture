@@ -5,6 +5,7 @@ public class EnemyBehavior : MonoBehaviour
 {
     public enum State { Orbiting, Attacking }
     [Header("Target/physics")]
+    private PlayerMovement player;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer enemySprite;
@@ -35,6 +36,7 @@ public class EnemyBehavior : MonoBehaviour
         // Generate the first random movement target
         currentTargetPoint = GetRandomPointAroundPlayer();
         attackCooldownTimer = attackCooldown;
+        waypointTimer = timeBetweenWaypoints; 
     }
 
     void Update()
@@ -44,20 +46,13 @@ public class EnemyBehavior : MonoBehaviour
             Destroy(gameObject);
         }
         if (currentState == State.Orbiting)
-        {
+        {                                  
             waypointTimer -= Time.deltaTime;
             attackCooldownTimer -= Time.deltaTime;
 
-            // Trigger an attack if the cooldown is over
             if (attackCooldownTimer <= 0f)
             {
                 StartCoroutine(AttackRoutine());
-            }
-            // Otherwise, pick a new random spot if enough time passed or if we reached the current spot
-            else if (waypointTimer <= 0f || Vector2.Distance(transform.position, currentTargetPoint) < waypointTolerance)
-            {
-                currentTargetPoint = GetRandomPointAroundPlayer(); //gets random point and resets the timer
-                waypointTimer = timeBetweenWaypoints;
             }
         }
     }
@@ -67,27 +62,38 @@ public class EnemyBehavior : MonoBehaviour
         //moves enemy randomly 
         if (currentState == State.Orbiting)
         {
-            Vector2 targetDirection = (currentTargetPoint - rb.position).normalized;
-            Vector2 desiredVelocity = targetDirection * moveSpeed;
-            AimMouse(targetDirection);
+            HandleOrbitingMovement();
+        }
+    }
 
-            //chech distance to player
-            Vector2 vectorToPlayer = (Vector2)playerTransform.position - rb.position;
-            float distanceToPlayer = vectorToPlayer.magnitude;
+    private void HandleOrbitingMovement()
+    {
+        Vector2 targetDirection = (currentTargetPoint - rb.position).normalized;
+        Vector2 desiredVelocity = targetDirection * moveSpeed;
+        AimMouse(targetDirection);
 
-            //apply a push away from the player
-            if (distanceToPlayer < minDistanceToPlayer)
-            {
-                // Vector pointing directly away from the player
-                Vector2 escapeDirection = -vectorToPlayer.normalized;
-                //closer the enemy is, the harder it gets pushed away
-                float pushStrength = (minDistanceToPlayer - distanceToPlayer) / minDistanceToPlayer;
-                desiredVelocity += escapeDirection * (moveSpeed * 2f) * pushStrength;
-            }
+        //chech distance to player
+        Vector2 vectorToPlayer = (Vector2)playerTransform.position - rb.position;
+        float distanceToPlayer = vectorToPlayer.magnitude;
 
-            //apply the position
-            Vector2 newPos = rb.position + desiredVelocity * Time.fixedDeltaTime;
-            rb.MovePosition(newPos);
+        //apply a push away from the player
+        if (distanceToPlayer < minDistanceToPlayer)
+        {
+            Vector2 escapeDirection = -vectorToPlayer.normalized;
+            //closer the enemy is, the harder it gets pushed away
+            float pushStrength = (minDistanceToPlayer - distanceToPlayer) / minDistanceToPlayer;
+            desiredVelocity += escapeDirection * (moveSpeed * 2f) * pushStrength;
+        }
+
+        //apply the position
+        Vector2 newPosT = rb.position + desiredVelocity * Time.fixedDeltaTime;
+        rb.MovePosition(newPosT);
+
+        float distanceToTarget = Vector2.Distance(rb.position, currentTargetPoint);
+        if (distanceToTarget <= waypointTolerance || waypointTimer <= 0f)
+        {
+            currentTargetPoint = GetRandomPointAroundPlayer();
+            waypointTimer = timeBetweenWaypoints;
         }
     }
 
@@ -117,7 +123,7 @@ public class EnemyBehavior : MonoBehaviour
 
         if (isMelee)
         {
-           
+            //Enemy dashes like hell into player
             float elapsedTime = 0f;
             while (elapsedTime < attackDuration)
             {
@@ -125,6 +131,22 @@ public class EnemyBehavior : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+        }
+        else
+        {
+            if (bulletPrefab != null && firePoint != null)
+            {
+                GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+                // Calculate direction towards the player
+                Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>(); 
+                if (bulletRb != null)
+                {
+                    float bulletSpeed = 10f;
+                    bulletRb.linearVelocity = attackDirection * bulletSpeed; 
+                }
+            }
+            yield return new WaitForSeconds(0.1f);
         }
         else
         {

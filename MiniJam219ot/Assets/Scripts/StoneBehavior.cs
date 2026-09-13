@@ -7,6 +7,7 @@ public class StoneBehavior : MonoBehaviour
     private SpriteRenderer enemySprite;
     private Rigidbody2D rb; 
     private Transform target;
+    private PlayerMovement player;
     private bool canSpawnSlime;
     [SerializeField] private GameObject slimePrefab;
     [Header("Movement")]
@@ -20,6 +21,7 @@ public class StoneBehavior : MonoBehaviour
     [SerializeField] private float maxSlimeRTime;
     [SerializeField] private float timeBetweenAttacks;
     [SerializeField] private float MaxtimeBetweenAttacks;
+    [SerializeField] int pointsToGive, moneyToGive;
     private State currentState = State.Attacking;
     private Vector2 currentMovement;
     private Transform cachedTransform;
@@ -29,6 +31,7 @@ public class StoneBehavior : MonoBehaviour
         cachedTransform = transform;
         rb = GetComponent<Rigidbody2D>();
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        player = Object.FindAnyObjectByType<PlayerMovement>();
         enemySprite = GetComponent<SpriteRenderer>();
         timeBetweenAttacks = MaxtimeBetweenAttacks;
         slimeRTime = maxSlimeRTime;
@@ -92,6 +95,7 @@ public class StoneBehavior : MonoBehaviour
             health--;
             if (health <= 0)
             {
+                player.rewardForKill(moneyToGive, pointsToGive);
                 // TODO: Add points to player score manager here
                 // TODO: Instantiate particle effect
                 Destroy(gameObject);

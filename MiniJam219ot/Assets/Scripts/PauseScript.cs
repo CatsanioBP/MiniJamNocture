@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseScript : MonoBehaviour
 {
+    [SerializeField]GameObject pickingMenu;
     public static bool isPaused;
     [SerializeField] GameObject pauseMenu;
 
@@ -45,5 +46,15 @@ public class PauseScript : MonoBehaviour
     public void QuitToMenu()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    //MISC STUFF DOWN HERE
+    public void SimplePause()
+    {
+        Time.timeScale = 0;
+    }
+    public void SimpleResume()
+    {
+        Time.timeScale = 1;
     }
 }
