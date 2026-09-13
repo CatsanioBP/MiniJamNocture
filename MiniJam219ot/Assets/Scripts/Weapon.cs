@@ -10,8 +10,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] SpriteRenderer weaponSprite;
     [SerializeField] GameObject bulletPrefab;
     public Transform firePoint;
-    float reloadLevel;
-    float damageLevel;
+    int reloadLevel;
+    int damageLevel;
 
     public float reloadTime;
     private float currentReloadTime = 0f;
@@ -83,6 +83,7 @@ public class Weapon : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, cachedTransform.rotation);
         Destroy(bullet, 3f);
         currentReloadTime = reloadTime; 
+        bullet.GetComponent<BulletsScript>().damageLevel = this.damageLevel;
     }
     public void onUpgradeChoose(string chosenUpgrade)
     {
@@ -125,7 +126,7 @@ public class Weapon : MonoBehaviour
                 reloadLevel+=1;
                 break;
             case "damage":
-
+                damageLevel += 1;
                 break;
             
         }

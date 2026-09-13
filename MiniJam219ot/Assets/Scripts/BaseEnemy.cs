@@ -1,14 +1,22 @@
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BaseEnemy : MonoBehaviour
 {
+    float fireTimer = 0f;
+    float iceTimer;
+    [SerializeField]float elementalTimerLength;
+    float fireDamageCooldown = 1f;
     [SerializeField] SpriteRenderer enemySprite;
     public GameObject target;
     [SerializeField] float speed;
+    float savedSpeed;
     [SerializeField] int damage,health;
     private Rigidbody2D rb;
     private Vector2 movement;
     private PlayerMovement player;
+    private float elementalLevel;
     [SerializeField] int pointsToGive, moneyToGive;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -16,6 +24,7 @@ public class BaseEnemy : MonoBehaviour
         //target = GameObject.FindGameObjectWithTag("Player");
         player = Object.FindAnyObjectByType<PlayerMovement>();
         rb = GetComponent<Rigidbody2D>();
+        savedSpeed = speed;
     }
 
     // Update is called once per frame
@@ -26,6 +35,28 @@ public class BaseEnemy : MonoBehaviour
         AimMouse(direction);
         direction.Normalize();
         movement = direction.normalized;
+        if(fireTimer >= 0)
+        {
+            if(fireDamageCooldown <= 0)
+            {
+                doFireDamage();
+                fireDamageCooldown = 0.5f;
+            }
+            fireDamageCooldown-=Time.deltaTime;
+
+            fireTimer-=Time.deltaTime;
+        }
+        if(iceTimer >= 0)
+        {
+            speed*=0.5f;
+            iceTimer-=Time.deltaTime;
+        }
+        else
+        {
+            speed = savedSpeed;
+        }
+
+
     }
     private void FixedUpdate()
     {
@@ -45,7 +76,8 @@ public class BaseEnemy : MonoBehaviour
         }
         if(collision.CompareTag("OurBullet"))
         {
-            health-= 1 + collision.GetComponent<BulletsScript>().damageLevel;
+            BulletsScript bulletScript = collision.GetComponent<BulletsScript>();
+            health -= 1 + bulletScript.damageLevel;
             if(health <= 0)
             {
                 player.rewardForKill(moneyToGive, pointsToGive);
@@ -56,7 +88,25 @@ public class BaseEnemy : MonoBehaviour
         }
         if (collision.CompareTag("OurSword"))
         {
-            health-= 2 + collision.GetComponent<SwordScript>().damageLevel;
+            SwordScript swordScript = collision.GetComponent<SwordScript>();
+            health-= 2 + swordScript.damageLevel;
+            switch (swordScript.currentElement.ToString())
+            {
+                case "ice":
+                    elementalTimerLength = 0.5f * swordScript.elementalLevel;
+                    iceTimer = elementalTimerLength;
+                    elementalLevel = swordScript.elementalLevel;
+                    break;
+                case "fire":
+                    elementalTimerLength = 0.5f * swordScript.elementalLevel;
+                    fireTimer = elementalTimerLength;
+                    elementalLevel = swordScript.elementalLevel;
+                    break;
+                case "wind":
+                    doKnockback(swordScript.knockbackStrength, swordScript.direction);
+                    elementalLevel = swordScript.elementalLevel;
+                    break;
+            }
             if(health <= 0)
             {
                 player.rewardForKill(moneyToGive,pointsToGive);
@@ -78,4 +128,20 @@ public class BaseEnemy : MonoBehaviour
             enemySprite.flipX = true;
         } 
     }
+    void doKnockback(float knockBackStrength, Vector2 direction)
+    {
+        rb.AddForce(direction.normalized * knockBackStrength, ForceMode2D.Force);
+    }
+    void doFireDamage()
+    {
+        health -= 1;
+        Debug.Log("fire damage taken");
+    }
+    // async void doSlowDown()
+    // {
+    //     float savedSpeed = speed;
+    //     speed = speed * 0.5f;
+    //     await Awaitable.WaitForSecondsAsync(5f);
+
+    // }
 }

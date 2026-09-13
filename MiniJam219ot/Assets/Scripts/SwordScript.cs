@@ -10,7 +10,7 @@ public class SwordScript : MonoBehaviour
     public float knockbackStrength;
     public int elementalLevel;
     public int damageLevel;
-    element currentElement;
+    public element currentElement;
     int reloadLevel = 0;
     public float reloadTime;
     private float currentReloadTime = 0f;
@@ -19,6 +19,7 @@ public class SwordScript : MonoBehaviour
     private PauseScript pause;
     private Camera mainCamera;
     private Transform cachedTransform;
+    public Vector2 direction;
 
     void OnEnable()
     {
@@ -67,7 +68,7 @@ public class SwordScript : MonoBehaviour
     void AimMouse()
     {
         Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = mousePosition - cachedTransform.position;
+        direction = mousePosition - cachedTransform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         cachedTransform.rotation = Quaternion.Euler(0, 0, angle);
